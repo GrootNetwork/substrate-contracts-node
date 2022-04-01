@@ -255,8 +255,20 @@ impl pallet_balances::Config for Runtime {
 	type WeightInfo = pallet_balances::weights::SubstrateWeight<Runtime>;
 }
 
+
+struct CustomFeelessWeightToFee;
+impl Convert<Weight, Balance> for CustomFeelessWeightToFee {
+    fn convert(w: Weight) -> Balance {
+        let a = Balance::from(0);
+        // let w = Balance::from(w);
+        a
+    }
+}
+
+
 parameter_types! {
-	pub const TransactionByteFee: Balance = 1;
+	// pub const TransactionByteFee: Balance = 1;
+	pub const TransactionByteFee: Balance = 0;
 	pub OperationalFeeMultiplier: u8 = 5;
 }
 
@@ -264,7 +276,8 @@ impl pallet_transaction_payment::Config for Runtime {
 	type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
 	type TransactionByteFee = TransactionByteFee;
 	type OperationalFeeMultiplier = OperationalFeeMultiplier;
-	type WeightToFee = IdentityFee<Balance>;
+	// type WeightToFee = IdentityFee<Balance>;
+	type WeightToFee = CustomWeightToFee;
 	type FeeMultiplierUpdate = ();
 }
 
