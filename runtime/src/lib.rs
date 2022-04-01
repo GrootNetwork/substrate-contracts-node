@@ -277,7 +277,7 @@ impl pallet_transaction_payment::Config for Runtime {
 	type TransactionByteFee = TransactionByteFee;
 	type OperationalFeeMultiplier = OperationalFeeMultiplier;
 	// type WeightToFee = IdentityFee<Balance>;
-	type WeightToFee = CustomWeightToFee;
+	type WeightToFee = CustomFeelessWeightToFee;
 	type FeeMultiplierUpdate = ();
 }
 
