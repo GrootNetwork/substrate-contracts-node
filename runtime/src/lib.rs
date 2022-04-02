@@ -5,7 +5,7 @@
 // Make the WASM binary available.
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
-
+use smallvec::smallvec;
 use frame_support::weights::DispatchClass;
 use frame_system::limits::{BlockLength, BlockWeights};
 use pallet_contracts::weights::WeightInfo;
@@ -13,7 +13,7 @@ use sp_api::impl_runtime_apis;
 use sp_core::{crypto::KeyTypeId, OpaqueMetadata};
 use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
-	traits::{Convert, AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, Verify},
+	traits::{AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, Verify},
 	transaction_validity::{TransactionSource, TransactionValidity},
 	ApplyExtrinsicResult, MultiSignature,
 };
@@ -282,7 +282,7 @@ struct CustomFeelessWeightToFee;
 // }
 
 impl WeightToFeePolynomial for CustomFeelessWeightToFee {
-	// type Balance = u64;
+	type Balance = Balance;
 	
 	fn polynomial() -> WeightToFeeCoefficients<Self::Balance> {
 		let WEIGHT_TO_FEE: Balance = 0;
@@ -299,7 +299,7 @@ impl WeightToFeePolynomial for CustomFeelessWeightToFee {
 parameter_types! {
 	// pub const TransactionByteFee: Balance = 1;
 	pub const TransactionByteFee: Balance = 0;
-	pub const TransactionBaseFee: Balance = 0;
+	// pub const TransactionBaseFee: Balance = 0;
 	pub OperationalFeeMultiplier: u8 = 5;
 	
 }
@@ -307,7 +307,7 @@ parameter_types! {
 impl pallet_transaction_payment::Config for Runtime {
 	type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
 	type TransactionByteFee = TransactionByteFee;
-	type TransactionBaseFee = TransactionBaseFee;
+	// type TransactionBaseFee = TransactionBaseFee;
 	type OperationalFeeMultiplier = OperationalFeeMultiplier;
 	// type WeightToFee = IdentityFee<Balance>;
 	type WeightToFee = CustomFeelessWeightToFee;
