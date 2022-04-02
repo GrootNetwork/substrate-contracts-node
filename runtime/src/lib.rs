@@ -32,6 +32,7 @@ pub use frame_support::{
 	},
 	StorageValue,
 };
+use frame_support::weights::{WeightToFeePolynomial, WeightToFeeCoefficients};
 pub use pallet_balances::Call as BalancesCall;
 pub use pallet_timestamp::Call as TimestampCall;
 use pallet_transaction_payment::CurrencyAdapter;
@@ -257,24 +258,56 @@ impl pallet_balances::Config for Runtime {
 
 
 struct CustomFeelessWeightToFee;
-impl Convert<Weight, Balance> for CustomFeelessWeightToFee {
-    fn convert(w: Weight) -> Balance {
-        let a = Balance::from(0);
-        // let w = Balance::from(w);
-        a
-    }
+// impl Convert<Weight, Balance> for CustomFeelessWeightToFee {
+//     fn convert(w: Weight) -> Balance {
+//         let a = Balance::from(0);
+//         // let w = Balance::from(w);
+//         a
+//     }
+// }
+
+// impl WeightToFeePolynomial for CustomFeelessWeightToFee {
+//     type Balance = Balance;
+//     fn polynomial() -> WeightToFeeCoefficients<Self::Balance> {
+//         // Extrinsic base weight (smallest non-zero weight) is mapped to 1/10 CENT:
+//         let p = CENTS;
+//         let q = 10 * Balance::from(ExtrinsicBaseWeight::get());
+//         smallvec![WeightToFeeCoefficient {
+// 				degree: 1,
+// 				negative: false,
+// 				coeff_frac: Perbill::from_rational(p % q, q),
+// 				coeff_integer: p / q,
+// 			}]
+//     }
+// }
+
+impl WeightToFeePolynomial for CustomFeelessWeightToFee {
+	// type Balance = u64;
+	
+	fn polynomial() -> WeightToFeeCoefficients<Self::Balance> {
+		let WEIGHT_TO_FEE: Balance = 0;
+		smallvec![WeightToFeeCoefficient {
+			degree: 1,
+			coeff_frac: Perbill::zero(),
+			coeff_integer: WEIGHT_TO_FEE,
+			negative: false,
+		}]
+	}
 }
 
 
 parameter_types! {
 	// pub const TransactionByteFee: Balance = 1;
 	pub const TransactionByteFee: Balance = 0;
+	pub const TransactionBaseFee: Balance = 0;
 	pub OperationalFeeMultiplier: u8 = 5;
+	
 }
 
 impl pallet_transaction_payment::Config for Runtime {
 	type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
 	type TransactionByteFee = TransactionByteFee;
+	type TransactionBaseFee = TransactionBaseFee;
 	type OperationalFeeMultiplier = OperationalFeeMultiplier;
 	// type WeightToFee = IdentityFee<Balance>;
 	type WeightToFee = CustomFeelessWeightToFee;
