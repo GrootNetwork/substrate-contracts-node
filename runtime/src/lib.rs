@@ -5,7 +5,7 @@
 // Make the WASM binary available.
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
-use smallvec::smallvec;
+
 use frame_support::weights::DispatchClass;
 use frame_system::limits::{BlockLength, BlockWeights};
 use pallet_contracts::weights::WeightInfo;
@@ -33,6 +33,7 @@ pub use frame_support::{
 	StorageValue,
 };
 use frame_support::weights::{WeightToFeePolynomial, WeightToFeeCoefficients};
+use smallvec::smallvec;
 pub use pallet_balances::Call as BalancesCall;
 pub use pallet_timestamp::Call as TimestampCall;
 use pallet_transaction_payment::CurrencyAdapter;
