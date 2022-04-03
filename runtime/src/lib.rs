@@ -32,9 +32,9 @@ pub use frame_support::{
 	},
 	StorageValue,
 };
-use frame_support::weights::{WeightToFeePolynomial, WeightToFeeCoefficients};
 use frame_support::weights::WeightToFeeCoefficient;
 use smallvec::smallvec;
+use frame_support::weights::{WeightToFeePolynomial, WeightToFeeCoefficients};
 pub use pallet_balances::Call as BalancesCall;
 pub use pallet_timestamp::Call as TimestampCall;
 use pallet_transaction_payment::CurrencyAdapter;
