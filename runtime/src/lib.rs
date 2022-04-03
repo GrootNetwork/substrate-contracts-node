@@ -259,7 +259,7 @@ impl pallet_balances::Config for Runtime {
 }
 
 
-struct CustomFeelessWeightToFee;
+pub struct CustomFeelessWeightToFee;
 // impl Convert<Weight, Balance> for CustomFeelessWeightToFee {
 //     fn convert(w: Weight) -> Balance {
 //         let a = Balance::from(0);
